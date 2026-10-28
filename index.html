@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星期英文學習站</title>
+  <style>
+    :root {
+      --ink:#22243a;--muted:#74788f;--primary:#6558e8;--dark:#453bbd;
+      --yellow:#ffd86b;--green:#2fb878;--red:#e96868;--line:#e7e6f0;
+      --shadow:0 18px 45px rgba(45,42,92,.13)
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;color:var(--ink);
+      background:radial-gradient(circle at 8% 8%,#fff0bd 0 8%,transparent 9%),
+      radial-gradient(circle at 95% 15%,#ddd9ff 0 10%,transparent 11%),
+      linear-gradient(145deg,#f7f7ff,#fff9ed);
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+    }
+    .app{width:min(100% - 28px,760px);margin:auto;padding:28px 0 42px}
+    header{display:flex;justify-content:space-between;gap:16px;margin-bottom:22px}
+    .eyebrow{margin:0 0 7px;color:var(--primary);font-size:.78rem;font-weight:900;letter-spacing:.14em}
+    h1{margin:0;font-size:clamp(2rem,9vw,3.2rem);line-height:.98;letter-spacing:-.06em}
+    .intro{max-width:430px;margin:12px 0 0;color:var(--muted);line-height:1.6}
+    .logo{flex:none;width:64px;height:64px;display:grid;place-items:center;border-radius:22px;
+      background:var(--yellow);box-shadow:5px 6px 0 #e4b943;font-size:2rem;transform:rotate(7deg)}
+    .shell{overflow:hidden;border:1px solid #fff;border-radius:30px;background:#ffffffd1;box-shadow:var(--shadow)}
+    .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:10px;border-bottom:1px solid var(--line);background:#f8f8ff}
+    .tab{min-height:60px;padding:7px 4px;border:0;border-radius:15px;color:var(--muted);background:transparent;cursor:pointer;font:inherit;font-size:.74rem;font-weight:850}
+    .tab span{display:block;margin-bottom:3px;font-size:1.32rem}
+    .tab.active{color:white;background:var(--primary);box-shadow:0 4px 0 var(--dark)}
+    .panel{padding:24px 20px 28px}.panel h2{margin:0;font-size:1.55rem}
+    .panel-note{margin:8px 0 20px;color:var(--muted);line-height:1.6}.hidden{display:none!important}
+    button{-webkit-tap-highlight-color:transparent}
+    .review-layout{display:grid;gap:16px}
+    .flashcard{min-height:260px;display:grid;place-items:center;padding:28px 20px;border:2px solid #e8e5ff;
+      border-radius:25px;background:linear-gradient(145deg,#f6f4ff,#fff);text-align:center;cursor:pointer}
+    .day-zh{color:var(--dark);font-size:clamp(2.3rem,12vw,4rem);font-weight:950;letter-spacing:-.08em}
+    .day-en{margin-top:8px;font-size:clamp(1.35rem,6vw,2rem);font-weight:850}
+    .pronunciation{margin-top:12px;color:var(--muted)}
+    .example{margin:0;padding:18px;border-radius:18px;background:#fff8df;color:#61552c;line-height:1.65}
+    .example strong{display:block;margin-bottom:4px;color:#9a7c13;font-size:.82rem}
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .primary-btn,.secondary-btn{min-height:52px;padding:0 20px;border-radius:16px;cursor:pointer;font:inherit;font-weight:850}
+    .primary-btn{border:0;color:#fff;background:var(--primary);box-shadow:0 5px 0 var(--dark)}
+    .primary-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--dark)}
+    .secondary-btn{border:2px solid var(--line);color:var(--ink);background:#fff}
+    .audio-btn{width:100%;margin-top:14px}
+    .quiz-box,.spell-card{padding:24px 18px;border-radius:23px;background:linear-gradient(145deg,#eef1ff,#fff);text-align:center}
+    .quiz-icon{font-size:3rem}.score{color:var(--dark);font-weight:900}
+    .choices{display:grid;gap:11px;margin-top:20px}
+    .choice{min-height:58px;border:2px solid var(--line);border-radius:17px;color:var(--ink);background:#fff;cursor:pointer;font:inherit;font-size:1.12rem;font-weight:850}
+    .choice:hover{border-color:var(--primary)}.choice.correct{border-color:var(--green);color:#168253;background:#e9fbf2}
+    .choice.wrong{border-color:var(--red);color:#c44848;background:#fff0f0}
+    .feedback{min-height:28px;margin:16px 0 0;text-align:center;font-weight:850}.good{color:#168253}.bad{color:#c44848}
+    .match-grid{display:grid;gap:22px}.match-column h3{margin:0 0 10px;color:var(--muted);font-size:.9rem}
+    .match-list{display:grid;gap:10px}.match-card,.drop-zone{min-height:55px;display:grid;place-items:center;padding:10px;border:2px dashed #cfd0df;border-radius:16px;background:#fff;font-weight:850;text-align:center}
+    .match-card{border-style:solid;cursor:grab}.match-card.selected{border-color:var(--primary);background:#eaf0ff}
+    .drop-zone{color:var(--muted)}.drop-zone.over{border-color:var(--primary);background:#f0efff}
+    .drop-zone.matched{border-style:solid;border-color:var(--green);color:#168253;background:#e9fbf2}
+    .spell-card{background:#fff8df}.spell-zh{color:#76631e;font-size:2rem;font-weight:950}
+    .spell-hint{margin:10px 0 18px;color:var(--muted);letter-spacing:.12em;font-weight:800}
+    .spell-input{width:100%;min-height:57px;padding:0 16px;border:2px solid var(--line);border-radius:16px;outline:none;background:#fff;font:inherit;font-size:1.15rem;font-weight:800;text-align:center}
+    .spell-input:focus{border-color:var(--primary)}.spell-input.correct{border-color:var(--green);background:#e9fbf2}
+    .spell-input.wrong{border-color:var(--red);background:#fff0f0}.spell-actions{display:grid;gap:10px;margin-top:13px}
+    .progress{height:9px;overflow:hidden;margin-top:20px;border-radius:99px;background:#e8e5d4}
+    .progress-bar{height:100%;width:0;border-radius:inherit;background:var(--green);transition:width .25s}
+    @media(min-width:560px){
+      .app{padding-top:48px}.panel{padding:30px}.review-layout{grid-template-columns:1.15fr .85fr;align-items:center}
+      .audio-btn{width:auto}.choices{grid-template-columns:repeat(2,1fr)}.match-grid{grid-template-columns:1fr 1fr}
+      .spell-actions{display:flex;justify-content:center}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <p class="eyebrow">English learning game</p>
+        <h1>星期英文<br>學習站</h1>
+        <p class="intro">先複習，再挑戰聽力、配對與拼字，慢慢把 Monday 到 Sunday 記起來！</p>
+      </div>
+      <div class="logo" aria-hidden="true">🗓️</div>
+    </header>
+
+    <section class="shell">
+      <nav class="tabs">
+        <button class="tab active" data-tab="review"><span>🃏</span>複習卡片</button>
+        <button class="tab" data-tab="listen"><span>🔊</span>聽音選字</button>
+        <button class="tab" data-tab="match"><span>🔗</span>拖曳配對</button>
+        <button class="tab" data-tab="spell"><span>✏️</span>拼字練習</button>
+      </nav>
+
+      <section id="review" class="panel">
+        <h2>卡片式複習</h2>
+        <p class="panel-note">點選卡片可以播放英文發音，使用下方按鈕查看下一個星期。</p>
+        <div class="review-layout">
+          <div>
+            <div id="flashcard" class="flashcard" role="button" tabindex="0">
+              <div>
+                <div id="reviewZh" class="day-zh"></div>
+                <div id="reviewEn" class="day-en"></div>
+                <div id="reviewPronunciation" class="pronunciation"></div>
+              </div>
+            </div>
+            <button id="speakReview" class="secondary-btn audio-btn">🔊 播放發音</button>
+          </div>
+          <div>
+            <p class="example"><strong>例句 Example</strong><span id="reviewExample"></span></p>
+            <div class="controls">
+              <button id="prevCard" class="secondary-btn">← 上一張</button>
+              <button id="nextCard" class="primary-btn">下一張 →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="listen" class="panel hidden">
+        <h2>聽音選單字</h2>
+        <p class="panel-note">按下播放按鈕，聽聽看是哪一個星期。</p>
+        <div class="quiz-box">
+          <div class="quiz-icon">🎧</div>
+          <p>目前得分：<span id="listenScore" class="score">0</span></p>
+          <button id="playSound" class="primary-btn">🔊 播放英文發音</button>
+          <div id="listenChoices" class="choices"></div>
+          <p id="listenFeedback" class="feedback"></p>
+        </div>
+      </section>
+
+      <section id="match" class="panel hidden">
+        <h2>英文與中文配對</h2>
+        <p class="panel-note">把英文卡片拖到正確的中文區域，也可以先點英文、再點中文完成配對。</p>
+        <div class="match-grid">
+          <div class="match-column"><h3>英文 English</h3><div id="englishCards" class="match-list"></div></div>
+          <div class="match-column"><h3>中文 Chinese</h3><div id="chineseZones" class="match-list"></div></div>
+        </div>
+        <p id="matchFeedback" class="feedback"></p>
+        <button id="resetMatch" class="secondary-btn" style="width:100%">重新排列</button>
+      </section>
+
+      <section id="spell" class="panel hidden">
+        <h2>拼字練習</h2>
+        <p class="panel-note">看中文提示，輸入正確的英文星期單字。現在會顯示第一個、中間一個與最後一個字母。</p>
+        <div class="spell-card">
+          <div id="spellZh" class="spell-zh"></div>
+          <p id="spellHint" class="spell-hint"></p>
+          <input id="spellInput" class="spell-input" type="text" autocomplete="off" autocapitalize="none" placeholder="輸入英文單字">
+          <div class="spell-actions">
+            <button id="checkSpell" class="primary-btn">檢查答案</button>
+            <button id="nextSpell" class="secondary-btn">下一題</button>
+          </div>
+          <p id="spellFeedback" class="feedback"></p>
+          <div class="progress"><div id="spellProgress" class="progress-bar"></div></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const days=[
+      {zh:"星期一",en:"Monday",pronunciation:"MON-day",example:"I go to school on Monday."},
+      {zh:"星期二",en:"Tuesday",pronunciation:"TOOZ-day",example:"We have English class on Tuesday."},
+      {zh:"星期三",en:"Wednesday",pronunciation:"WENZ-day",example:"Wednesday is the middle of the week."},
+      {zh:"星期四",en:"Thursday",pronunciation:"THURZ-day",example:"I play basketball on Thursday."},
+      {zh:"星期五",en:"Friday",pronunciation:"FRY-day",example:"Friday is my favorite school day."},
+      {zh:"星期六",en:"Saturday",pronunciation:"SAT-er-day",example:"We visit Grandma on Saturday."},
+      {zh:"星期日",en:"Sunday",pronunciation:"SUN-day",example:"I relax at home on Sunday."}
+    ];
+    const $=id=>document.getElementById(id);
+    const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+    let reviewIndex=0,listenAnswer,listenScore=0,spellAnswer,spellCount=0,selectedEnglish=null;
+
+    function speak(text){
+      if(!("speechSynthesis" in window)){alert("目前瀏覽器不支援語音播放。");return}
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=.82;speechSynthesis.speak(u)
+    }
+    function showReview(){
+      const d=days[reviewIndex];
+      $("reviewZh").textContent=d.zh;$("reviewEn").textContent=d.en;
+      $("reviewPronunciation").textContent="發音提示："+d.pronunciation;
+      $("reviewExample").textContent=d.example
+    }
+    function moveReview(n){reviewIndex=(reviewIndex+n+days.length)%days.length;showReview()}
+
+    function createListen(){
+      listenAnswer=days[Math.floor(Math.random()*days.length)];
+      $("listenFeedback").textContent="";$("listenFeedback").className="feedback";
+      $("listenChoices").innerHTML="";
+      shuffle(days).forEach(d=>{
+        const b=document.createElement("button");b.className="choice";b.textContent=d.en;
+        b.onclick=()=>answerListen(b,d);$("listenChoices").appendChild(b)
+      })
+    }
+    function answerListen(b,d){
+      [...$("listenChoices").children].forEach(x=>x.disabled=true);
+      if(d.en===listenAnswer.en){
+        b.classList.add("correct");listenScore+=10;$("listenScore").textContent=listenScore;
+        $("listenFeedback").textContent="答對了！太棒了！";$("listenFeedback").className="feedback good";
+        setTimeout(createListen,850)
+      }else{
+        b.classList.add("wrong");
+        [...$("listenChoices").children].find(x=>x.textContent===listenAnswer.en).classList.add("correct");
+        $("listenFeedback").textContent="答案是 "+listenAnswer.en+"，再聽一次吧！";
+        $("listenFeedback").className="feedback bad";setTimeout(createListen,1250)
+      }
+    }
+
+    function setupMatch(){
+      selectedEnglish=null;$("englishCards").innerHTML="";$("chineseZones").innerHTML="";
+      $("matchFeedback").textContent="";$("matchFeedback").className="feedback";
+      shuffle(days).forEach(d=>{
+        const c=document.createElement("div");c.className="match-card";c.textContent=d.en;c.draggable=true;c.dataset.en=d.en;
+        c.ondragstart=e=>{e.dataTransfer.setData("text/plain",d.en);c.classList.add("selected")};
+        c.ondragend=()=>c.classList.remove("selected");
+        c.onclick=()=>{if(!c.classList.contains("matched")){document.querySelectorAll(".match-card").forEach(x=>x.classList.remove("selected"));selectedEnglish=d.en;c.classList.add("selected")}};
+        $("englishCards").appendChild(c)
+      });
+      shuffle(days).forEach(d=>{
+        const z=document.createElement("div");z.className="drop-zone";z.textContent=d.zh;z.dataset.en=d.en;z.dataset.zh=d.zh;
+        z.ondragover=e=>{e.preventDefault();z.classList.add("over")};z.ondragleave=()=>z.classList.remove("over");
+        z.ondrop=e=>{e.preventDefault();z.classList.remove("over");checkMatch(e.dataTransfer.getData("text/plain"),z)};
+        z.onclick=()=>{if(selectedEnglish)checkMatch(selectedEnglish,z)};$("chineseZones").appendChild(z)
+      })
+    }
+    function checkMatch(en,z){
+      if(!en||z.classList.contains("matched"))return;
+      if(en===z.dataset.en){
+        z.textContent=z.dataset.zh+" ✓ "+en;z.classList.add("matched");
+        const c=[...document.querySelectorAll(".match-card")].find(x=>x.dataset.en===en);
+        if(c){c.classList.add("matched");c.draggable=false;c.classList.remove("selected")}
+        selectedEnglish=null;$("matchFeedback").textContent="配對成功！";$("matchFeedback").className="feedback good"
+      }else{$("matchFeedback").textContent="還差一點，再找找看！";$("matchFeedback").className="feedback bad"}
+    }
+
+    function createSpell(){
+      spellAnswer=days[Math.floor(Math.random()*days.length)];
+      $("spellZh").textContent=spellAnswer.zh;$("spellInput").value="";$("spellInput").className="spell-input";
+      $("spellFeedback").textContent="";$("spellFeedback").className="feedback";
+      const word=spellAnswer.en,mid=Math.floor(word.length/2);
+      $("spellHint").textContent="提示："+word.split("").map((x,i)=>
+        i===0||i===mid||i===word.length-1?x.toUpperCase():"_").join(" ");
+      $("spellInput").focus()
+    }
+    function checkSpell(){
+      const answer=$("spellInput").value.trim().toLowerCase();
+      if(!answer){$("spellFeedback").textContent="請先輸入答案。";$("spellFeedback").className="feedback bad";return}
+      if(answer===spellAnswer.en.toLowerCase()){
+        $("spellInput").classList.add("correct");$("spellFeedback").textContent="拼對了！做得很好！";
+        $("spellFeedback").className="feedback good";spellCount++;$("spellProgress").style.width=Math.min(spellCount*14.28,100)+"%"
+      }else{
+        $("spellInput").classList.add("wrong");$("spellFeedback").textContent="再試一次，注意中間提示的字母！";
+        $("spellFeedback").className="feedback bad"
+      }
+    }
+
+    document.querySelectorAll(".tab").forEach(tab=>tab.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach(x=>x.classList.add("hidden"));
+      tab.classList.add("active");$(tab.dataset.tab).classList.remove("hidden")
+    });
+    $("flashcard").onclick=()=>speak(days[reviewIndex].en);
+    $("flashcard").onkeydown=e=>{if(e.key==="Enter"||e.key===" ")speak(days[reviewIndex].en)};
+    $("speakReview").onclick=()=>speak(days[reviewIndex].en);
+    $("prevCard").onclick=()=>moveReview(-1);$("nextCard").onclick=()=>moveReview(1);
+    $("playSound").onclick=()=>listenAnswer&&speak(listenAnswer.en);
+    $("resetMatch").onclick=setupMatch;$("checkSpell").onclick=checkSpell;$("nextSpell").onclick=createSpell;
+    $("spellInput").onkeydown=e=>{if(e.key==="Enter")checkSpell()};
+
+    showReview();createListen();setupMatch();createSpell();
+  </script>
+</body>
+</html>
